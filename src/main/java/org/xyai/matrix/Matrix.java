@@ -11,6 +11,15 @@ public class Matrix {
     public boolean isRowVector=false;
     public boolean isZero=false;
 
+
+    public int getCols() {
+        return cols;
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
     public Matrix(int rows, int cols) {
         data=new double[rows][cols];
         this.rows=rows;
@@ -109,6 +118,16 @@ public class Matrix {
             return data[i][j];
         }else throw new Exception("out of range");
     }
+
+
+    public void set(int i,int j,double d)throws Exception {
+        if (i<=rows && j<=cols && i>0 && j>0)
+            data[i][j]=d;
+        else throw new Exception("out of range");
+
+    }
+
+
 
 
 }
