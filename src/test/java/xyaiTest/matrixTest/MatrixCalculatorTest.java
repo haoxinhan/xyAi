@@ -15,4 +15,18 @@ public class MatrixCalculatorTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void testSub() {
+        String data="1 1\n"+"1 1";
+        try {
+            Matrix a = new Matrix(2, 2,data );
+            Matrix b = new Matrix(2, 2,data );
+            Matrix c = MatrixCalculator.sub(a, b);
+            System.out.println(c);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
