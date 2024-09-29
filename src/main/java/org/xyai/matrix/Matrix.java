@@ -115,14 +115,14 @@ public class Matrix {
     public double get(int i,int j)throws Exception {
 
         if (i<=rows && j<=cols && i>0 && j>0){
-            return data[i][j];
+            return data[i-1][j-1];
         }else throw new Exception("out of range");
     }
 
 
     public void set(int i,int j,double d)throws Exception {
         if (i<=rows && j<=cols && i>0 && j>0)
-            data[i][j]=d;
+            data[i-1][j-1]=d;
         else throw new Exception("out of range");
 
     }
