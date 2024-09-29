@@ -55,6 +55,15 @@ public class MatrixCalculator {
 
         }
 
+
+    /**
+     * 去除矩阵指定行和列
+     * @param m 矩阵
+     * @param row 行
+     * @param col 列
+     * @return 去除指定行列后的矩阵
+     * @throws Exception
+     */
     public static Matrix subMatrix(Matrix m, int row, int col) throws Exception {
 
         Matrix result = new Matrix(m.getRows() - 1, m.getCols() - 1);
@@ -77,7 +86,12 @@ public class MatrixCalculator {
         return result;
     }
 
-    //矩阵行列式
+    /**
+     * 矩阵行列式
+     * @param a 矩阵
+     * @return 行列式
+     * @throws Exception
+     */
     public static double det(Matrix a) throws Exception {
         if (a.getRows() != a.getCols()) {
             throw new Exception("matrix is not square");
@@ -93,8 +107,12 @@ public class MatrixCalculator {
     }
 
 
-
-    //矩阵转置
+    /**
+     * 矩阵转置
+     * @param a 矩阵
+     * @return 转置后的矩阵
+     * @throws Exception
+     */
     public static Matrix transpose(Matrix a) throws Exception {
         Matrix result = new Matrix(a.getCols(), a.getRows());
         for (int i = 1; i <= a.getRows(); i++)
@@ -103,7 +121,12 @@ public class MatrixCalculator {
         return result;
     }
 
-    //伴随矩阵
+    /**
+     * 伴随矩阵
+     * @param a 矩阵
+     * @return 伴随矩阵
+     * @throws Exception
+     */
     public static Matrix adj(Matrix a) throws Exception {
         if (a.getRows() != a.getCols()) {
             throw new Exception("matrix is not square");
@@ -115,7 +138,13 @@ public class MatrixCalculator {
         return transpose(result);
     }
 
-    //矩阵数乘
+    /**
+     * 矩阵乘以一个数
+     * @param a 矩阵
+     * @param d 数
+     * @return 矩阵乘以一个数的结果
+     * @throws Exception
+     */
     public static Matrix mul(Matrix a, double d) throws Exception {
         Matrix result = new Matrix(a.getRows(), a.getCols());
         for (int i = 1; i <= a.getRows(); i++)
@@ -124,7 +153,12 @@ public class MatrixCalculator {
         return result;
     }
 
-    //逆矩阵
+    /**
+     * 矩阵的逆矩阵
+     * @param a 矩阵
+     * @return 逆矩阵
+     * @throws Exception
+     */
     public static Matrix inverse(Matrix a) throws Exception {
         if (a.getRows() != a.getCols()) {
             throw new Exception("matrix is not square");
@@ -134,6 +168,25 @@ public class MatrixCalculator {
             throw new Exception("matrix is not invertible");
         }
         return mul(adj(a),(1 / det));
+    }
+
+    /**
+     * 矩阵相乘
+     * @param a 矩阵
+     * @param b 矩阵
+     * @return 矩阵相乘的结果
+     * @throws Exception
+     */
+    public static Matrix mul(Matrix a, Matrix b) throws Exception {
+        if (a.getCols() != b.getRows())
+            throw new Exception("matrix is not invertible");
+        Matrix result = new Matrix(a.getRows(), b.getCols());
+        for (int i = 1; i <= a.getRows(); i++)
+            for (int j = 1; j <= b.getCols(); j++)
+                for (int k = 1; k <= a.getCols(); k++)
+                    result.set(i, j, result.get(i, j) + a.get(i, k) * b.get(k, j));
+        return result;
+
     }
 
 
