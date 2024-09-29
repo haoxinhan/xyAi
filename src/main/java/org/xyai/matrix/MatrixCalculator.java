@@ -94,5 +94,31 @@ public class MatrixCalculator {
 
 
 
+    //矩阵转置
+    public static Matrix transpose(Matrix a) throws Exception {
+        Matrix result = new Matrix(a.getCols(), a.getRows());
+        for (int i = 1; i <= a.getRows(); i++)
+            for (int j = 1; j <= a.getCols(); j++)
+                result.set(j, i, a.get(i, j));
+        return result;
+    }
+
+    //伴随矩阵
+    public static Matrix adj(Matrix a) throws Exception {
+        if (a.getRows() != a.getCols()) {
+            throw new Exception("matrix is not square");
+        }
+        Matrix result = new Matrix(a.getRows(), a.getCols());
+        for (int i = 1; i <= a.getRows(); i++)
+            for (int j = 1; j <= a.getCols(); j++)
+                result.set(i, j, Math.pow(-1, i + j) * det(subMatrix(a, i, j)));
+        return transpose(result);
+    }
+
+
+
+
+
+
 
 }
