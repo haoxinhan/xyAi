@@ -115,6 +115,27 @@ public class MatrixCalculator {
         return transpose(result);
     }
 
+    //矩阵数乘
+    public static Matrix mul(Matrix a, double d) throws Exception {
+        Matrix result = new Matrix(a.getRows(), a.getCols());
+        for (int i = 1; i <= a.getRows(); i++)
+            for (int j = 1; j <= a.getCols(); j++)
+                result.set(i, j, a.get(i, j) * d);
+        return result;
+    }
+
+    //逆矩阵
+    public static Matrix inverse(Matrix a) throws Exception {
+        if (a.getRows() != a.getCols()) {
+            throw new Exception("matrix is not square");
+        }
+        double det = det(a);
+        if (det == 0) {
+            throw new Exception("matrix is not invertible");
+        }
+        return mul(adj(a),(1 / det));
+    }
+
 
 
 
