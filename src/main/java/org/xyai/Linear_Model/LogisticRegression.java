@@ -5,12 +5,9 @@ import org.xyai.AF.Sigmoid;
 import org.xyai.Optimizer.SGD;
 import org.xyai.matrix.MatrixCalculator;
 
-public class LogisticRegression
+public class LogisticRegression extends LinearModel
 {
-    //参数矩阵
-    private Matrix theta;
-    //截距
-    private double intercept;
+
     //学习率
     private double learningRate;
     //迭代次数
@@ -18,7 +15,7 @@ public class LogisticRegression
 
     private double threshold=0;
     public LogisticRegression(int n ,double learningRate,int iteration){
-        this.theta=new Matrix(n,1);
+        super(n);
         this.learningRate=learningRate;
         this.iteration=iteration;
         this.theta.setallNum(0);
@@ -30,48 +27,17 @@ public class LogisticRegression
         this.threshold=n;
     }
     public void fit(Matrix X,Matrix y) throws Exception{
-        int n = X.getRows();
-        int m = X.getCols();
-        Matrix X1 = new Matrix(n, m + 1);
-        for (int i = 1; i <= n; i++) {
-            X1.set(i, 1, 1);
-        }
-        for (int i = 1; i <= n; i++) {
-            for (int j = 2; j <= m + 1; j++) {
-                X1.set(i, j, X.get(i, j - 1));
-            }
-        }
-        Matrix t = new Matrix(m + 1, 1);
-        t.set(1, 1, this.intercept);
-        for (int i = 1; i <= m; i++) {
-            t.set(i + 1, 1, this.theta.get(i, 1));
-        }
-
+        Matrix X1 = xToX(X);
+        TAndITot();
         SGD sgd = new SGD(learningRate, new BCELoss(), new Sigmoid(), iteration, this.threshold);
         t= sgd.optimize(X1, y, t);
-        this.intercept = t.get(1, 1);
-        for (int i = 1; i <= m; i++) {
-            this.theta.set(i, 1, t.get(i + 1, 1));
-        }
+        tToTAndI();
 
     }
     public Matrix predict(Matrix X) throws Exception{
-        int n = X.getRows();
-        int m = X.getCols();
-        Matrix X1 = new Matrix(n, m + 1);
-        for (int i = 1; i <= n; i++) {
-            X1.set(i, 1, 1);
-        }
-        for (int i = 1; i <= n; i++) {
-            for (int j = 2; j <= m + 1; j++) {
-                X1.set(i, j, X.get(i, j - 1));
-            }
-        }
-        Matrix t=new Matrix(m+1,1);
-        t.set(1,1,this.intercept);
-        for (int i = 1; i <= m; i++) {
-            t.set(i+1, 1, this.theta.get(i, 1));
-        }
+        Matrix X1 = xToX(X);
+        TAndITot();
+        int n = X1.getRows();
         Sigmoid sigmoid = new Sigmoid();
         Matrix y1 = MatrixCalculator.mul(X1, t);
         Matrix y2 = sigmoid.compute(y1);
