@@ -12,6 +12,7 @@ public class CrossEntropyLossTest {
         try {
             Matrix y_true=new Matrix(3,1,data1);
             Matrix y_pred=new Matrix(3,1,data2);
+            CrossEntropyLoss CrossEntropyLoss=new CrossEntropyLoss();
             double loss= CrossEntropyLoss.compute(y_true,y_pred);
             System.out.println(loss);
         }catch (Exception e){

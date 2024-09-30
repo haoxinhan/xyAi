@@ -2,9 +2,9 @@ package org.xyai.loss;
 import org.xyai.matrix.Matrix;
 
 
-public class CrossEntropyLoss
+public class CrossEntropyLoss extends loss
 {
-    public static double compute(Matrix y, Matrix y_hat)throws Exception
+    public  double compute(Matrix y, Matrix y_hat)throws Exception
     {
         if (y.getRows() != y_hat.getRows()){
             throw new Exception("y and y_hat must have the same number of rows");
