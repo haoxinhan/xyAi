@@ -46,6 +46,9 @@ public class LinearRegression {
     public Matrix getTheta() {
         return theta;
     }
+    public double getIntercept() {
+        return intercept;
+    }
 
 
 }

@@ -23,5 +23,33 @@ public class LinearRegressionTest {
         }
 
 
+
+    }
+
+    @Test
+    public void testLinearRegression2(){
+        //生成随机数 math.random
+        Matrix x=new Matrix(30,1);
+        Matrix y=new Matrix(30,1);
+        try {
+            for (int i=1;i<=x.getRows();i++){
+                x.set(i,1,i);
+                y.set(i,1,i*2+Math.random()*10);
+            }
+            System.out.println(y);
+            LinearRegression lr = new LinearRegression(1);
+            lr.fit(x,y);
+            System.out.println(lr.getTheta());
+            System.out.println(lr.getIntercept());
+
+            Matrix x_test=new Matrix(1,1,"11");
+            System.out.println(lr.predict(x_test));
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+
     }
 }
