@@ -70,11 +70,11 @@ public class MatrixCalculator {
         for (int i = 1; i <= m.getRows(); i++) {
             for (int j = 1; j <= m.getCols(); j++) {
                 if (i != row && j != col) {
-                    if (i > 1 && j > 1) {
+                    if (i > row && j > col) {
                         result.set(i - 1, j - 1, m.get(i, j));
-                    } else if (i >1) {
+                    } else if (i >row) {
                         result.set(i - 1, j, m.get(i, j));
-                    } else if (j>1) {
+                    } else if (j>col) {
                         result.set(i, j - 1, m.get(i, j));
                     }else {
                         result.set(i , j , m.get(i, j));
@@ -133,9 +133,11 @@ public class MatrixCalculator {
         }
         Matrix result = new Matrix(a.getRows(), a.getCols());
         for (int i = 1; i <= a.getRows(); i++)
-            for (int j = 1; j <= a.getCols(); j++)
+            for (int j = 1; j <= a.getCols(); j++) {
                 result.set(i, j, Math.pow(-1, i + j) * det(subMatrix(a, i, j)));
+            }
         return transpose(result);
+
     }
 
     /**
@@ -187,6 +189,28 @@ public class MatrixCalculator {
                     result.set(i, j, result.get(i, j) + a.get(i, k) * b.get(k, j));
         return result;
 
+    }
+    //正规方程
+    public static Matrix normalEquation(Matrix X, Matrix y) throws Exception {
+        if (X.getRows() == y.getRows()){
+            //将参数矩阵转置
+            Matrix matrix1 = transpose(X);
+            //转置的参数矩阵乘以参数矩阵
+            Matrix matrix2 = mul(matrix1, X);
+            //求上一步的逆矩阵 这一步需要矩阵非奇异,若出现奇异矩阵，则返回0矩阵，意味失败
+            Matrix matrix3 = inverse(matrix2);
+            if (matrix3.getRows() == 1 && matrix3.getCols() == 1) {
+                return matrix3;
+            } else {
+                //逆矩阵乘以转置矩阵
+                Matrix matrix4 = mul(matrix3, matrix1);
+                //最后乘以输出矩阵,生成权重矩阵并返回
+                return mul(matrix4, y);
+            }
+
+        }else{
+            throw new Exception("matrix is not invertible");
+        }
     }
 
 
