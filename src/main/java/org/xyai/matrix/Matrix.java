@@ -126,6 +126,12 @@ public class Matrix {
         else throw new Exception("out of range");
 
     }
+    public void setallNum(double n){
+        for (int i=0;i<rows;i++)
+            for (int j=0;j<cols;j++)
+                data[i][j]=n;
+
+    }
 
 
 
