@@ -132,7 +132,17 @@ public class Matrix {
                 data[i][j]=n;
 
     }
-
+    public Matrix getRow(int i)throws Exception {
+        if (i<=rows && i>=1){
+            StringBuilder sb=new StringBuilder();
+            for (int j=0;j<cols;j++){
+                sb.append(data[i-1][j]);
+                sb.append(" ");
+            }
+            return new Matrix(1,cols, sb.toString());
+        }
+        else throw new Exception("out of range");
+    }
 
 
 

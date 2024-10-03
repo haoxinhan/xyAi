@@ -132,5 +132,16 @@ public class MatrixCalculatorTest {
 
 
     }
+    @Test
+    public void testMulSpeed() throws Exception{
+        Matrix a = new Matrix(1000, 1000);
+        Matrix b = new Matrix(1000, 1000);
+        a.setallNum(1);
+        b.setallNum(1);
+        long start = System.currentTimeMillis();
+        Matrix c = MatrixCalculator.mul(a,b);
+        long end = System.currentTimeMillis();
+        System.out.println((end-start)/1000+"s");
+    }
 
 }

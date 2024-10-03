@@ -37,8 +37,10 @@ public class SGD
     }
     public Matrix optimize(Matrix x,Matrix y,Matrix w) throws Exception{
         for(int i=0;i<epochs;i++){
-            Matrix gradient=compute_gradient(x,y,w);
-            w=MatrixCalculator.add(w,MatrixCalculator.mul(gradient,learningRate));
+            for (int j=1;j<=x.getRows();j++){
+                Matrix gradient=compute_gradient(x.getRow(j),y.getRow(j),w);
+                w=MatrixCalculator.add(w,MatrixCalculator.mul(gradient,learningRate));
+            }
             if(i%100==0){
                 if(threshold!=0.0){
                     if(lossFunction.compute(y,MatrixCalculator.mul(x,w))<threshold){

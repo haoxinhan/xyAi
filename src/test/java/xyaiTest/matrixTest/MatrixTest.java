@@ -61,6 +61,20 @@ public class MatrixTest {
 
     }
 
+    @Test
+    public void gerRowTest() {
+        String data1="1 1\n" +
+                "2 2 ";
+        try {
+            Matrix m1 = new Matrix(2, 2,data1);
+
+            System.out.println(m1.getRow(1));
+
+        }catch (
+        Exception e){
+            e.printStackTrace();
+    }
+    }
 
 
 }

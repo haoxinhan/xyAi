@@ -15,7 +15,7 @@ public class SGDLinearRegressionTest
                 y.set(i,1,i*2+Math.random()*10);
             }
             System.out.println(y);
-            SGDLinearRegression lr = new SGDLinearRegression(1, 0.00001,100000);
+            SGDLinearRegression lr = new SGDLinearRegression(1, 0.0001,10000);
             lr.fit(x,y);
             System.out.println(lr.getTheta());
             System.out.println(lr.getIntercept());

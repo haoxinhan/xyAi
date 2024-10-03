@@ -163,7 +163,7 @@ public class DataFrame {
 
     public void print(int n){
         print_head();
-
+        System.out.println();
         for (int i = 0; i < n; i++) {
             for (String columnName : columnNames) {
                 System.out.print(data.get(columnName).get(i) + ",\t");
@@ -210,6 +210,90 @@ public Matrix toMatrix() throws Exception {
     }
     return m;
 }
+
+    public List<Map<String,Double>> toList(){
+        List<Map<String,Double>> list = new ArrayList<>();
+        for (int i = 0; i < getRowCount(); i++) {
+            Map<String,Double> map = new HashMap<>();
+            for (String columnName : columnNames) {
+                map.put(columnName,data.get(columnName).get(i));
+            }
+            list.add(map);
+        }
+        return list;
+    }
+    public void addColumn(String columnName) {
+        if (!columnNames.contains(columnName)) {
+            columnNames.add(columnName);
+            data.put(columnName, new ArrayList<>());
+
+        }
+    }
+
+    public void addColumns(List<String> columns) {
+        for (String columnName : columns) {
+            if (!columnNames.contains(columnName)) {
+                this.addColumn(columnName);
+            }
+        }
+
+    }
+
+    public static Map<String,DataFrame> trainTestSplit(DataFrame dataFrame, double test_size, long random_state	) throws Exception
+    {
+        Map<String,DataFrame> map = new HashMap<>();
+        DataFrame train = new DataFrame();
+        DataFrame test = new DataFrame();
+
+        train.addColumns(dataFrame.getColumnNames());
+        test.addColumns(dataFrame.getColumnNames());
+
+
+        //随机打乱数据
+        List<Map<String,Double>> list = dataFrame.toList();
+        if(random_state!=0){
+            Random random = new Random(random_state);
+            Collections.shuffle(list,random);
+
+        }else {
+            Random random = new Random();
+            Collections.shuffle(list,random);
+        }
+        int train_size = (int) (list.size() * (1 - test_size));
+        for (int i = 0; i < train_size; i++) {
+            train.addRow(list.get(i));
+        }
+        for (int i = train_size; i < list.size(); i++) {
+            test.addRow(list.get(i));
+        }
+        map.put("train",train);
+        map.put("test",test);
+
+        return map;
+
+
+    }
+
+    public DataFrame copy(){
+        DataFrame df = new DataFrame();
+        df.columnNames = new ArrayList<>(columnNames);
+        df.data = new HashMap<>(data);
+        return df;
+
+    }
+
+    public DataFrame dropColumn(String columnName) {
+        if (columnNames.contains(columnName)) {
+            DataFrame df=copy();
+            df.columnNames.remove(columnName);
+            df.data.remove(columnName);
+            return df;
+
+        }
+        throw new IllegalArgumentException("Column " + columnName + " does not exist in the DataFrame");
+
+
+    }
 
 
 
