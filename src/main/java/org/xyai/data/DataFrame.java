@@ -1,5 +1,7 @@
 package org.xyai.data;
 
+import org.xyai.matrix.Matrix;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -23,6 +25,21 @@ public class DataFrame {
     }
 
 
+    public int getRowCount() {
+        if (data.isEmpty()) {
+            return 0;
+        }
+        int max=0;
+        for (String columnName : columnNames) {
+            if (data.get(columnName).size() > max) {
+                max = data.get(columnName).size();
+
+            }
+        }
+        return max;
+    }
+
+
     // 构造函数
     public DataFrame() {
         this.data = new LinkedHashMap<>(); // 使用LinkedHashMap来保持插入顺序
@@ -33,8 +50,7 @@ public class DataFrame {
     public void addRow(Map<String, Double> row) {
         for (String columnName : row.keySet()) {
             if (!data.containsKey(columnName)) {
-                data.put(columnName, new ArrayList<>());
-                columnNames.add(columnName);
+                throw new IllegalArgumentException("Column " + columnName + " does not exist");
             }
             data.get(columnName).add(row.get(columnName));
         }
@@ -44,6 +60,25 @@ public class DataFrame {
     public void addColumn(String columnName, List<Double> columnData) {
         if (columnData == null || (data.containsKey(columnName) && columnData.size() != getRowCount())) {
             throw new IllegalArgumentException("Column data size must match number of rows if column exists");
+        }
+        int length=this.getRowCount();
+        if (columnData.size() != length) {
+            if (columnData.size() < length) {
+                for (int i = columnData.size(); i < length; i++) {
+                    columnData.add(null);
+                }
+            }
+            else {
+                for (String cname: columnNames) {
+                    if (cname.equals(columnName)) {
+                        continue;
+                    }
+                    List<Double> cdata = data.get(cname);
+                    for (int i = cdata.size(); i < columnData.size() ; i++) {
+                        cdata.add(null);
+                    }
+                }
+            }
         }
         data.put(columnName, columnData);
         if (!columnNames.contains(columnName)) {
@@ -65,12 +100,6 @@ public class DataFrame {
     }
 
     // 获取行数
-    public int getRowCount() {
-        if (data.isEmpty()) {
-            return 0;
-        }
-        return data.get(columnNames.get(0)).size();
-    }
 
     // 获取列数
     public int getColumnCount() {
@@ -97,6 +126,7 @@ public class DataFrame {
         for (int i = 0; i < getRowCount(); i++) {
             for (String columnName : columnNames) {
                 System.out.print(data.get(columnName).get(i) + ",\t");
+
             }
             System.out.println();
         }
@@ -141,6 +171,46 @@ public class DataFrame {
             System.out.println();
         }
     }
+    public DataFrame getRowToDataFrame(int n){
+        DataFrame df = new DataFrame();
+        for (String columnName : columnNames) {
+            List<Double> d = new ArrayList<>();
+            d.add(data.get(columnName).get(n));
+
+            df.addColumn(columnName, d);
+        }
+        return df;
+    }
+public DataFrame getColumnToDataFrame(String columnName) {
+    DataFrame df = new DataFrame();
+    df.addColumn(columnName, data.get(columnName));
+    return df;
+}
+
+//删除有null的行
+public void deleteNullRow(){
+    for (int i = 0; i < getRowCount(); i++) {
+        for (String columnName : columnNames) {
+            if (data.get(columnName).get(i) == null) {
+                deleteRow(i);
+                i--;
+                break;
+            }
+        }
+    }
+}
+
+public Matrix toMatrix() throws Exception {
+    Matrix m = new Matrix(getRowCount(), getColumnCount());
+    for (int i = 0; i < getRowCount(); i++) {
+        for (int j = 0; j < getColumnCount(); j++) {
+            m.set(i+1, j+1, data.get(columnNames.get(j)).get(i));
+
+        }
+    }
+    return m;
+}
+
 
 
 }

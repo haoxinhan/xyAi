@@ -11,8 +11,7 @@ public class CSVLoaderTest {
         CSVLoader csvLoader = new CSVLoader("E:\\pl\\wq\\data\\wine_df.csv");
         DataFrame df=csvLoader.getDataFrame();
         df.print();
-        df.deleteColumn("quality");
-        df.print();
+
 
     }
 }
