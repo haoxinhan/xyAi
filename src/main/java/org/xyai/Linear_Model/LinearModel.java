@@ -1,5 +1,6 @@
 package org.xyai.Linear_Model;
 
+import org.xyai.data.DataFrame;
 import org.xyai.matrix.Matrix;
 
 public class LinearModel {
@@ -14,6 +15,14 @@ public class LinearModel {
         this.theta=new Matrix(n,1);
         this.t=new Matrix(n+1,1);
         this.m=n;
+
+    }
+
+    public void fit(DataFrame x,DataFrame y)throws Exception{
+        this.fit(x.toMatrix(),y.toMatrix());
+    }
+
+    public void fit(Matrix X, Matrix y) throws Exception{
 
     }
 

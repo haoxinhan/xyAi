@@ -1,6 +1,8 @@
 package Linear_ModelTest;
 import org.junit.jupiter.api.Test;
 import org.xyai.Linear_Model.LinearRegression;
+import org.xyai.data.CSVLoader;
+import org.xyai.data.DataFrame;
 import org.xyai.matrix.Matrix;
 
 
@@ -49,6 +51,22 @@ public class LinearRegressionTest {
             e.printStackTrace();
         }
 
+
+
+    }
+    @Test
+    public void testLinearRegression3() throws Exception{
+        CSVLoader csvLoader = new CSVLoader("E:\\test.csv");
+        DataFrame df = csvLoader.getDataFrame();
+        df.print();
+        DataFrame X = df.getColumnToDataFrame("x");
+        DataFrame y = df.getColumnToDataFrame("y");
+        LinearRegression lr = new LinearRegression(1);
+        lr.fit(X,y);
+        System.out.println(lr.getTheta());
+        System.out.println(lr.getIntercept());
+        Matrix x_test=new Matrix(1,1,"11");
+        System.out.println(lr.predict(x_test));
 
 
     }
