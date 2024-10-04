@@ -134,14 +134,43 @@ public class MatrixCalculatorTest {
     }
     @Test
     public void testMulSpeed() throws Exception{
-        Matrix a = new Matrix(1000, 1000);
-        Matrix b = new Matrix(1000, 1000);
+        Matrix a = new Matrix(100000, 100000);
+        Matrix b = new Matrix(100000, 100000);
         a.setallNum(1);
         b.setallNum(1);
         long start = System.currentTimeMillis();
         Matrix c = MatrixCalculator.mul(a,b);
         long end = System.currentTimeMillis();
         System.out.println((end-start)/1000+"s");
+    }
+
+    @Test
+    public void testNormalEquationSpeed() throws Exception{
+        Matrix a = new Matrix(20, 20);
+        Matrix b = new Matrix(20, 1);
+        for (int i=1;i<=a.getRows();i++){
+            for (int j=1;j<=a.getCols();j++){
+                a.set(i,j,i+j*Math.random());
+            }
+            b.set(i,1,i*Math.random());
+        }
+
+
+
+
+        long start = System.currentTimeMillis();
+
+        Matrix x1= MatrixCalculator.transpose(a);
+        Matrix x2 = MatrixCalculator.mul(x1,a);
+        double Det = MatrixCalculator.det(x2);
+
+        //Matrix c = MatrixCalculator.adj(x2);
+        long end = System.currentTimeMillis();
+
+
+
+        System.out.println((end-start)/1000+"s");
+
     }
 
 }

@@ -144,6 +144,15 @@ public class Matrix {
         else throw new Exception("out of range");
     }
 
+    public void setRow(int i,Matrix m)throws Exception {
+        if (i<=rows && i>=1 && m.cols==cols){
+            for (int j=0;j<cols;j++){
+                data[i-1][j]=m.get(1,j+1);
+
+            }
+        }
+    }
+
 
 
 }

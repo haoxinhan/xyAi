@@ -1,5 +1,15 @@
 package org.xyai.matrix;
-import org.xyai.matrix.Matrix;
+
+import java.util.List;
+//ArrayList
+import java.util.ArrayList;
+//Exception
+import java.lang.Exception;
+//ExecutorService
+import java.util.concurrent.ExecutorService;
+//Executors
+import java.util.concurrent.Executors;
+
 public class MatrixCalculator {
 
 
@@ -56,6 +66,13 @@ public class MatrixCalculator {
         }
 
 
+    public static double algebraicCofactor(Matrix matrix, int row, int column) throws Exception {//获取代数余子式
+        return Math.pow(-1, row + column) * det(subMatrix(matrix, row, column));
+
+    }
+
+
+
     /**
      * 去除矩阵指定行和列
      * @param m 矩阵
@@ -85,6 +102,12 @@ public class MatrixCalculator {
         }
         return result;
     }
+
+
+
+
+
+
 
     /**
      * 矩阵行列式
@@ -132,10 +155,15 @@ public class MatrixCalculator {
             throw new Exception("matrix is not square");
         }
         Matrix result = new Matrix(a.getRows(), a.getCols());
-        for (int i = 1; i <= a.getRows(); i++)
-            for (int j = 1; j <= a.getCols(); j++) {
-                result.set(i, j, Math.pow(-1, i + j) * det(subMatrix(a, i, j)));
-            }
+        //获取cpu核心数
+        int core = Runtime.getRuntime().availableProcessors();
+        //线程池
+        ExecutorService executorService = Executors.newFixedThreadPool(core);
+
+        for (int i = 1; i <= a.getRows(); i++) {
+            cadfrThread ct = new cadfrThread(a, i, result);
+            executorService.execute(ct);
+        }
         return transpose(result);
 
     }
@@ -183,10 +211,23 @@ public class MatrixCalculator {
         if (a.getCols() != b.getRows())
             throw new Exception("matrix is not invertible");
         Matrix result = new Matrix(a.getRows(), b.getCols());
+
+        if (a.getRows() < 100 && b.getRows() < 100) {
+            for (int i = 1; i <= a.getRows(); i++)
+                for (int j = 1; j <= b.getCols(); j++)
+                    for (int k = 1; k <= a.getCols(); k++)
+                        result.set(i, j, result.get(i, j) + a.get(i, k) * b.get(k, j));
+            return result;
+        }
+        //获取cpu核数
+        int cpuNum = Runtime.getRuntime().availableProcessors();
+        //创建线程池
+        ExecutorService executorService = Executors.newFixedThreadPool(cpuNum);
         for (int i = 1; i <= a.getRows(); i++)
-            for (int j = 1; j <= b.getCols(); j++)
-                for (int k = 1; k <= a.getCols(); k++)
-                    result.set(i, j, result.get(i, j) + a.get(i, k) * b.get(k, j));
+            {
+                mulRThread mt1=new mulRThread(a,b,result,i);
+                executorService.submit(mt1);
+            }
         return result;
 
     }
@@ -213,10 +254,59 @@ public class MatrixCalculator {
         }
     }
 
+}
+
+//计算一行的伴随矩阵线程
+class cadfrThread implements Runnable {
+    private Matrix a;
+    private int row;
+    private Matrix result;
+    public cadfrThread(Matrix a, int row, Matrix result) {
+        this.a = a;
+        this.row = row;
+        this.result = result;
+
+    }
+    public void run() {
+        try {
+            for (int j = 1; j <= a.getCols(); j++) {
+                result.set(row, j, MatrixCalculator.algebraicCofactor(a, row, j));
+            }
+
+           }catch (Exception e) {
+               e.printStackTrace();
+
+        }
+    }
+}
 
 
 
+class mulRThread implements Runnable {
+    private Matrix a;
+    private Matrix b;
+    private Matrix result;
+    private int row;
+    public mulRThread(Matrix a, Matrix b, Matrix result, int row) {
+        this.a = a;
+        this.b = b;
+        this.result = result;
+        this.row = row;
 
+    }
+    public void run() {
+        try {
+            for (int j = 1; j <= b.getCols(); j++) {
+                for (int k = 1; k <= a.getCols(); k++) {
+                    result.set(row, j, result.get(row, j) + a.get(row, k) * b.get(k, j));
+                }
+            }
+        }catch (
+            Exception e) {
+            e.printStackTrace();
+        }
 
+    }
 
 }
+
