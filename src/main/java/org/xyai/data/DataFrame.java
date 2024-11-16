@@ -1,6 +1,6 @@
 package org.xyai.data;
 
-import org.xyai.matrix.Matrix;
+import org.xymatrix.Matrix;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
